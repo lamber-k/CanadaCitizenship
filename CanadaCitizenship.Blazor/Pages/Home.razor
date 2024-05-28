@@ -1,0 +1,89 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<RadzenLayout>
+    <RadzenBody>
+        <RadzenRow>
+            <RadzenColumn Size="6"Visible="@(SelectedProfile is not null)">
+                <RadzenRow Gap="1rem">
+                    <RadzenFormField Text="First Entry" Variant="Variant.Filled">
+                        <RadzenDatePicker DateFormat="d" @bind-Value="@SelectedProfile!.TemporaryDate" TValue="DateTime?"></RadzenDatePicker>
+                    </RadzenFormField>
+                    <RadzenFormField Text="Permanent Residency" Variant="Variant.Filled">
+                        <RadzenDatePicker DateFormat="d" @bind-Value="@SelectedProfile!.PRDate" TValue="DateTime?"></RadzenDatePicker>
+                    </RadzenFormField>
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" Text="Add Period" Click="@InsertRow" />
+                    <RadzenDataGrid @ref="outOfCountryDataGrid" TItem="Period" Data="@SelectedProfile?.OutOfCountry" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow">
+                        <Columns>
+                            <RadzenDataGridColumn Title="Begin" Property="Begin" FormatString="{0:d}">
+                                <EditTemplate Context="period">
+                                    <RadzenDatePicker @bind-Value="period.Begin" DateFormat="d" Style="width:100%; display: block;" />
+                                </EditTemplate>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn Title="End" Property="End" FormatString="{0:d}">
+                                <EditTemplate Context="period">
+                                    <RadzenDatePicker @bind-Value="period.End" DateFormat="d" Style="width:100%; display: block;" />
+                                </EditTemplate>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn Frozen="true" FrozenPosition="FrozenColumnPosition.Right">
+                                <Template Context="period">
+                                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(period))" @onclick:stopPropagation="true">
+                                    </RadzenButton>
+                                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(period))" @onclick:stopPropagation="true">
+                                    </RadzenButton>
+                                </Template>
+                                <EditTemplate Context="period">
+                                    <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(period))" aria-label="Save">
+                                    </RadzenButton>
+                                    <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => CancelEdit(period))" aria-label="Cancel">
+                                    </RadzenButton>
+                                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(period))" aria-label="Delete">
+                                    </RadzenButton>
+                                </EditTemplate>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                </RadzenRow>
+            </RadzenColumn>
+            <RadzenColumn Size="6">
+                <RadzenRow>
+                    <RadzenFormField Text="Current Profile" Variant="Variant.Filled">
+                        <RadzenDropDown Data="@Profiles" TextProperty="Name" TValue="Profile" @bind-Value="@SelectedProfile" Change="@OnSelectionChange">
+                        </RadzenDropDown>
+                    </RadzenFormField>
+                    <RadzenButton Visible="@(SelectedProfile is not null)" Click="@ProfileDelete">Delete Profile</RadzenButton>
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenFormField Text="Profile Name" Variant="Variant.Filled">
+                        <RadzenTextBox @bind-Value="@NewProfileName" />
+                    </RadzenFormField>
+                    <RadzenButton Click="@AddProfile">New Profile</RadzenButton>
+                </RadzenRow>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow AlignItems="AlignItems.Center">
+            <RadzenButton Click="@Compute">Compute</RadzenButton>
+        </RadzenRow>
+        <RadzenRow Visible="@(Result is not null)">
+            <RadzenColumn Size="12">
+                <RadzenLabel>@string.Format(Messages.BeginTemporaryFormat, Result!.StartTemporary)</RadzenLabel>
+            </RadzenColumn>
+            <RadzenColumn Size="12">
+                <RadzenLabel>@string.Format(Messages.TotalTemporaryFormat, Result!.TemporaryDays)</RadzenLabel>
+            </RadzenColumn>
+            <RadzenColumn Size="12">
+                <RadzenLabel>@string.Format(Messages.TotalPRFormat, Result!.PRDays)</RadzenLabel>
+            </RadzenColumn>
+            <RadzenColumn Size="12">
+                <RadzenLabel>@string.Format(Messages.RemainingFormat, Result!.RemainingDays)</RadzenLabel>
+            </RadzenColumn>
+            <RadzenColumn Size="12">
+                <RadzenLabel>@string.Format(Messages.ProjectedApplyDateFormat, Result!.ProjectedDate)</RadzenLabel>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenBody>
+</RadzenLayout>
+
