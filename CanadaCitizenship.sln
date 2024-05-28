@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CanadaCitizenship.Algorithm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CanadaCitizenship", "CanadaCitizenship\CanadaCitizenship.csproj", "{C8EBC6C3-EE71-489F-9037-8BC582520ACD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanadaCitizenship.Blazor", "CanadaCitizenship.Blazor\CanadaCitizenship.Blazor.csproj", "{60ABBE0B-709C-4923-830F-E59CC6628686}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CanadaCitizenship.Blazor", "CanadaCitizenship.Blazor\CanadaCitizenship.Blazor.csproj", "{60ABBE0B-709C-4923-830F-E59CC6628686}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

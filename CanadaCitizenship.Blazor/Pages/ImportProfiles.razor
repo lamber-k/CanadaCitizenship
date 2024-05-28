@@ -1,0 +1,48 @@
+﻿@using System.Text.Json
+
+<RadzenStack>
+    <InputFile OnChange="@InputProfileChange" />
+    <RadzenButton Visible="@(PendingImportProfilesFile is not null)" Click="@OnImportProfiles">Import Profiles</RadzenButton>
+</RadzenStack>
+
+
+@code {
+    [Inject]
+    ILogger<ImportProfiles> Logger { get; set; } = null!;
+    [Inject]
+    protected DialogService DialogService { get; set; } = null!;
+    [Inject]
+    protected NotificationService NotificationService { get; set; } = null!;
+
+
+    public IBrowserFile? PendingImportProfilesFile { get; set; }
+
+    public void InputProfileChange(InputFileChangeEventArgs e)
+    {
+        PendingImportProfilesFile = e.File;
+    }
+
+    public async Task OnImportProfiles()
+    {
+        if (PendingImportProfilesFile is not null)
+        {
+            try
+            {
+                using Stream fs = PendingImportProfilesFile.OpenReadStream();
+                List<Profile>? profiles = await JsonSerializer.DeserializeAsync<List<Profile>>(fs);
+                if (profiles is not null)
+                {
+
+                    DialogService.Close(profiles);
+                }
+                PendingImportProfilesFile = null;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Import Profiles failed");
+                NotificationService.Notify(NotificationSeverity.Error, "Import Profiles", "Import Profiles failed");
+            }
+        }
+    }
+
+}

@@ -1,0 +1,40 @@
+﻿<RadzenStack>
+    <RadzenTemplateForm TItem="AddProfileModel" Data="Model" Submit="CreateProfile">
+        <RadzenColumn>
+            <RadzenFormField class="w-100" Text="Profile Name" Variant="Variant.Filled">
+                <RadzenTextBox Name="ProfileName" @bind-Value="@Model.Name" />
+            </RadzenFormField>
+            <RadzenRequiredValidator Component="ProfileName" Text="Profile Name is required" />
+            <RadzenCustomValidator Component="ProfileName" Validator="SameProfileNameValidator" Text="A Profile with the same name already exists" />
+        </RadzenColumn>
+        <RadzenButton class="float-end mt-1" ButtonType="ButtonType.Submit">Create</RadzenButton>
+    </RadzenTemplateForm>
+</RadzenStack>
+
+@code {
+    class AddProfileModel
+    {
+        public string? Name { get; set; }
+    }
+
+    [Parameter]
+    public IReadOnlyCollection<Profile> Profiles { get; set; } = null!;
+
+    [Inject]
+    protected DialogService DialogService { get; set; } = null!;
+    [Inject]
+    protected NotificationService NotificationService { get; set; } = null!;
+
+    AddProfileModel Model { get; } = new AddProfileModel();
+
+    public bool SameProfileNameValidator() => !Profiles.Any(p => p.Name == Model.Name);
+
+    public void CreateProfile()
+    {
+        if (!string.IsNullOrEmpty(Model.Name))
+        {
+            Profile newProfile = new Profile(Model.Name);
+            DialogService.Close(newProfile);
+        }
+    }
+}

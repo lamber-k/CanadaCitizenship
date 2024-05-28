@@ -1,28 +1,27 @@
 using Blazored.LocalStorage;
 using CanadaCitizenship.Algorithm;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Text;
-using System.Text.Json;
 
 namespace CanadaCitizenship.Blazor.Pages
 {
     public partial class Home
     {
-        private const string STORAGE_PROFILES_KEY = "Profiles";
-
+        [Inject]
+        protected DialogService DialogService { get; set; } = null!;
         [Inject]
         protected ILocalStorageService LocalStorageService { get; set; } = null!;
         [Inject]
         protected NotificationService NotificationService { get; set; } = null!;
+        [Inject]
+        protected IJSRuntime JsRuntime { get; set; } = null!;
 
         RadzenDataGrid<Period> outOfCountryDataGrid = null!;
         public ObservableCollection<Profile> Profiles { get; set; } = [];
         public Profile? SelectedProfile { get; set; }
-        public string? NewProfileName { get; set; }
         public CitizenshipResult? Result { get; set; }
         public Period? ToUpdate { get; set; }
         public Period? ToCreate { get; set; }
@@ -31,46 +30,6 @@ namespace CanadaCitizenship.Blazor.Pages
         {
             Profiles = new ObservableCollection<Profile>(await LocalStorageService.GetItemAsync<List<Profile>>(STORAGE_PROFILES_KEY) ?? []);
             Profiles.CollectionChanged += Profiles_CollectionChanged;
-        }
-
-        private async void Profiles_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            await LocalStorageService.SetItemAsync(STORAGE_PROFILES_KEY, Profiles);
-        }
-
-        public void OnSelectionChange()
-        {
-            foreach (var profile in Profiles)
-            {
-                profile.PropertyChanged -= SelectedProfile_PropertyChanged;
-            }
-            if (SelectedProfile is not null)
-            {
-                SelectedProfile.PropertyChanged += SelectedProfile_PropertyChanged;
-            }
-        }
-
-        private async void SelectedProfile_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            await LocalStorageService.SetItemAsync(STORAGE_PROFILES_KEY, Profiles);
-        }
-
-        public void ProfileDelete()
-        {
-            if (SelectedProfile is not null)
-            {
-                Profiles.Remove(SelectedProfile);
-            }
-        }
-
-        public void AddProfile()
-        {
-            if (!string.IsNullOrEmpty(NewProfileName))
-            {
-                Profile newProfile = new Profile(NewProfileName);
-                Profiles.Add(newProfile);
-                SelectedProfile = newProfile;
-            }
         }
 
         public async Task InsertRow()
@@ -109,15 +68,12 @@ namespace CanadaCitizenship.Blazor.Pages
             if (SelectedProfile is not null)
             {
                 SelectedProfile.OutOfCountry.Remove(period);
-                await LocalStorageService.SetItemAsync(STORAGE_PROFILES_KEY, Profiles);
+                await SaveProfiles();
                 await outOfCountryDataGrid.Reload();
             }
         }
 
-        public async Task OnUpdateRow()
-        {
-            await LocalStorageService.SetItemAsync(STORAGE_PROFILES_KEY, Profiles);
-        }
+        public Task OnUpdateRow() => SaveProfiles();
 
         public async Task OnCreateRow()
         {
@@ -125,7 +81,7 @@ namespace CanadaCitizenship.Blazor.Pages
             {
                 SelectedProfile.OutOfCountry.Add(ToCreate);
                 ToCreate = null;
-                await LocalStorageService.SetItemAsync(STORAGE_PROFILES_KEY, Profiles);
+                await SaveProfiles();
             }
         }
 
