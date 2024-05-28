@@ -32,7 +32,6 @@
                 List<Profile>? profiles = await JsonSerializer.DeserializeAsync<List<Profile>>(fs);
                 if (profiles is not null)
                 {
-
                     DialogService.Close(profiles);
                 }
                 PendingImportProfilesFile = null;

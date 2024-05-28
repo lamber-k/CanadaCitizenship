@@ -1,6 +1,7 @@
 ﻿using CanadaCitizenship.Algorithm;
 using Microsoft.JSInterop;
 using Radzen;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.Json;
 
@@ -10,24 +11,32 @@ namespace CanadaCitizenship.Blazor.Pages
     {
         private const string STORAGE_PROFILES_KEY = "Profiles";
 
+        public ObservableCollection<Profile> Profiles { get; set; } = [];
+        Profile? _selectedProfile;
+        public Profile? SelectedProfile
+        {
+            get => _selectedProfile;
+            set
+            {
+                if (_selectedProfile != value)
+                {
+                    if (_selectedProfile is not null)
+                        _selectedProfile.PropertyChanged -= SelectedProfile_PropertyChanged;
+                    _selectedProfile = value;
+                    if (_selectedProfile is not null)
+                    {
+                        _selectedProfile.PropertyChanged += SelectedProfile_PropertyChanged;
+                        Compute();
+                    }
+                }
+            }
+        }
+
         private async void Profiles_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => await SaveProfiles();
 
         private async Task SaveProfiles()
         {
             await LocalStorageService.SetItemAsync(STORAGE_PROFILES_KEY, Profiles);
-        }
-
-        public void OnSelectionChange()
-        {
-            foreach (var profile in Profiles)
-            {
-                profile.PropertyChanged -= SelectedProfile_PropertyChanged;
-            }
-            if (SelectedProfile is not null)
-            {
-                SelectedProfile.PropertyChanged += SelectedProfile_PropertyChanged;
-                Compute();
-            }
         }
 
         private async void SelectedProfile_PropertyChanged(object? sender, PropertyChangedEventArgs e)

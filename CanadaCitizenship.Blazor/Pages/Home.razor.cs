@@ -20,8 +20,7 @@ namespace CanadaCitizenship.Blazor.Pages
         protected IJSRuntime JsRuntime { get; set; } = null!;
 
         RadzenDataGrid<Period> outOfCountryDataGrid = null!;
-        public ObservableCollection<Profile> Profiles { get; set; } = [];
-        public Profile? SelectedProfile { get; set; }
+
         public CitizenshipResult? Result { get; set; }
         public Period? ToUpdate { get; set; }
         public Period? ToCreate { get; set; }
