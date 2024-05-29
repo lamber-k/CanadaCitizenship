@@ -8,6 +8,8 @@ namespace CanadaCitizenship.Algorithm
 {
     public class Profile : INotifyPropertyChanged
     {
+        public static Profile Default => new Profile("Default");
+
         [SetsRequiredMembers]
         [JsonConstructor]
         public Profile(string name)
@@ -15,7 +17,7 @@ namespace CanadaCitizenship.Algorithm
             Name = name;
         }
 
-        private string? _name;
+        private string _name = null!;
         public required string Name 
         { 
             get => _name;

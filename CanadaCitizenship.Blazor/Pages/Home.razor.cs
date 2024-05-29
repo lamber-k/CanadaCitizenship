@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using CanadaCitizenship.Algorithm;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
@@ -18,6 +19,8 @@ namespace CanadaCitizenship.Blazor.Pages
         protected NotificationService NotificationService { get; set; } = null!;
         [Inject]
         protected IJSRuntime JsRuntime { get; set; } = null!;
+        [Inject]
+        protected ContextMenuService ContextMenuService { get; set; } = null!;
 
         RadzenDataGrid<Period> outOfCountryDataGrid = null!;
 
@@ -25,28 +28,28 @@ namespace CanadaCitizenship.Blazor.Pages
         public Period? ToUpdate { get; set; }
         public Period? ToCreate { get; set; }
 
+        public Home()
+        {
+            _selectedProfile = Profiles.First();
+        }
+
         protected override async Task OnInitializedAsync()
         {
-            Profiles = new ObservableCollection<Profile>(await LocalStorageService.GetItemAsync<List<Profile>>(STORAGE_PROFILES_KEY) ?? []);
+            Profiles = new ObservableCollection<Profile>(await LocalStorageService.GetItemAsync<List<Profile>>(STORAGE_PROFILES_KEY) ?? [Profile.Default]);
+            SelectedProfile = Profiles.First();
             Profiles.CollectionChanged += Profiles_CollectionChanged;
         }
 
         public async Task InsertRow()
         {
-            if (SelectedProfile is not null)
-            {
-                ToCreate = new Period();
-                await outOfCountryDataGrid.InsertRow(ToCreate);
-            }
+            ToCreate = new Period();
+            await outOfCountryDataGrid.InsertRow(ToCreate);
         }
 
         async Task EditRow(Period period)
         {
-            if (SelectedProfile is not null)
-            {
-                ToUpdate = period;
-                await outOfCountryDataGrid.EditRow(period);
-            }
+            ToUpdate = period;
+            await outOfCountryDataGrid.EditRow(period);
         }
 
         async Task SaveRow(Period period)
@@ -64,19 +67,16 @@ namespace CanadaCitizenship.Blazor.Pages
 
         public async Task DeleteRow(Period period)
         {
-            if (SelectedProfile is not null)
-            {
-                SelectedProfile.OutOfCountry.Remove(period);
-                await SaveProfiles();
-                await outOfCountryDataGrid.Reload();
-            }
+            SelectedProfile.OutOfCountry.Remove(period);
+            await SaveProfiles();
+            await outOfCountryDataGrid.Reload();
         }
 
         public Task OnUpdateRow() => SaveProfiles();
 
         public async Task OnCreateRow()
         {
-            if (SelectedProfile is not null && ToCreate is not null)
+            if (ToCreate is not null)
             {
                 SelectedProfile.OutOfCountry.Add(ToCreate);
                 ToCreate = null;
@@ -84,18 +84,60 @@ namespace CanadaCitizenship.Blazor.Pages
             }
         }
 
+        public void OpenContextMenu(MouseEventArgs args)
+        {
+            ContextMenuService.Open(args,
+            [
+                .. Profiles.Select(p => new ContextMenuItem() { Text = p.Name, Value = string.Concat("user_", p.Name), Icon = "account_circle" }),
+                new ContextMenuItem(){ Text = "New Profile", Value = "profile_add", Icon = "add" },
+                new ContextMenuItem(){ Text = "Delete Profile", Value = "profile_delete", Icon = "delete" },
+                new ContextMenuItem(){ Text = "Import Profiles", Value = "profile_import", Icon = "file_upload" },
+                new ContextMenuItem(){ Text = "Save Profile", Value = "profile_export", Icon = "save" },
+                new ContextMenuItem(){ Text = "Switch Language", Value = "switch_culture", Icon = "language" },
+            ], OnMenuClick);
+        }
+
+        public async void OnMenuClick(MenuItemEventArgs selected)
+        {
+            ContextMenuService.Close();
+            switch (selected.Value)
+            {
+                case string path when path.StartsWith("user_"):
+                    SelectedProfile = Profiles.First(p => p.Name == path[5..]);
+                    break;
+                case "profile_delete":
+                    ProfileDelete();
+                    break;
+                case "profile_import":
+                    await ImportProfiles();
+                    break;
+                case "profile_export":
+                    ExportProfiles();
+                    break;
+                case "profile_add":
+                    await AddProfile();
+                    break;
+                case "switch_culture":
+                    await SwitchCulture();
+                    break;
+            }
+            StateHasChanged();
+        }
+
+        public async Task SwitchCulture()
+        {
+            await DialogService.OpenSideAsync<SwitchCulture>("Switch Culture");
+        }
+
         public void Compute()
         {
-            if (SelectedProfile is not null)
+            try
             {
-                try
-                {
-                    Result = CitizenshipAlgorithm.Compute(SelectedProfile);
-                }
-                catch (InvalidOperationException iex) when (Messages.ResourceManager.GetString(iex.Message) is not null)
-                {
-                    NotificationService.Notify(NotificationSeverity.Error, "Result", Messages.ResourceManager.GetString(iex.Message));
-                }
+                Result = CitizenshipAlgorithm.Compute(SelectedProfile);
+            }
+            catch (InvalidOperationException iex) when (Messages.ResourceManager.GetString(iex.Message) is not null)
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Result", Messages.ResourceManager.GetString(iex.Message));
             }
         }
     }

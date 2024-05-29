@@ -11,9 +11,9 @@ namespace CanadaCitizenship.Blazor.Pages
     {
         private const string STORAGE_PROFILES_KEY = "Profiles";
 
-        public ObservableCollection<Profile> Profiles { get; set; } = [];
-        Profile? _selectedProfile;
-        public Profile? SelectedProfile
+        public ObservableCollection<Profile> Profiles { get; set; } = [Profile.Default];
+        Profile _selectedProfile;
+        public Profile SelectedProfile
         {
             get => _selectedProfile;
             set
@@ -47,11 +47,12 @@ namespace CanadaCitizenship.Blazor.Pages
 
         public void ProfileDelete()
         {
-            if (SelectedProfile is not null)
+            Profiles.Remove(SelectedProfile);
+            if (!Profiles.Any())
             {
-                Profiles.Remove(SelectedProfile);
-                SelectedProfile = Profiles.FirstOrDefault();
+                Profiles.Add(Profile.Default);
             }
+            SelectedProfile = Profiles.First();
         }
 
         public async Task AddProfile()
@@ -70,10 +71,10 @@ namespace CanadaCitizenship.Blazor.Pages
             if (result is List<Profile> loadedProfiles)
             {
                 Profiles.CollectionChanged -= Profiles_CollectionChanged;
-                Profiles = new System.Collections.ObjectModel.ObservableCollection<Profile>(loadedProfiles);
+                Profiles = new ObservableCollection<Profile>(loadedProfiles);
                 await SaveProfiles();
                 Profiles.CollectionChanged += Profiles_CollectionChanged;
-                SelectedProfile = Profiles.FirstOrDefault();
+                SelectedProfile = Profiles.First();
             }
         }
 

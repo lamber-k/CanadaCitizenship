@@ -1,0 +1,38 @@
+﻿@using System.Globalization
+@using Blazored.LocalStorage
+@inject NavigationManager Navigation
+@inject ILocalStorageService LocalStorageService
+@inject IStringLocalizer<SwitchCulture> Loc
+
+<RadzenStack>
+    <RadzenTemplateForm TItem="CultureInfo" Data="SelectedCulture" Submit="@ApplySwitchCulture">
+        <RadzenColumn>
+            <RadzenFormField class="w-100" Text="Culture Selection" Variant="Variant.Filled">
+                <RadzenDropDown Name="CultureOption" TValue="CultureInfo" TextProperty="DisplayName" @bind-Value="@SelectedCulture" Data="@AvailableCulture" />
+            </RadzenFormField>
+            <RadzenRequiredValidator Component="CultureOption" Text="You must select a language" />
+        </RadzenColumn>
+        <RadzenButton class="float-end mt-1" ButtonType="ButtonType.Submit">@Loc["SwitchBtn"]</RadzenButton>
+        <RadzenButton class="float-end mt-1" ButtonType="ButtonType.Reset">Cancel</RadzenButton>
+    </RadzenTemplateForm>
+</RadzenStack>
+
+
+@code {
+    CultureInfo? SelectedCulture = CultureInfo.CurrentCulture;
+
+    private readonly CultureInfo[] AvailableCulture = 
+    [
+        new CultureInfo("fr"),
+        new CultureInfo("en"),
+    ];
+
+    public async Task ApplySwitchCulture()
+    {
+        if (SelectedCulture is not null && SelectedCulture != CultureInfo.CurrentCulture)
+        {
+            await LocalStorageService.SetItemAsStringAsync("AppCulture", SelectedCulture.Name);
+            Navigation.NavigateTo(Navigation.Uri, true);
+        }
+    }
+}
