@@ -27,7 +27,6 @@ namespace CanadaCitizenship.Blazor.Pages
         public CitizenshipResult? Result { get; set; }
         public Period? ToUpdate { get; set; }
         public Period? ToCreate { get; set; }
-
         public Home()
         {
             _selectedProfile = Profiles.First();

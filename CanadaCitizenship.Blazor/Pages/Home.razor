@@ -19,7 +19,9 @@
                 <RadzenFieldset AllowCollapse="true">
                     <HeaderTemplate><RadzenLabel>@Loc["ParametersSectionHeader"]</RadzenLabel></HeaderTemplate>
                     <ChildContent>
-                        <RadzenRow Gap="1rem">
+                        <RadzenRow Gap="1rem" style="max-width: 800px">
+                            <div>@Loc["IntroText"]</div>
+                            <div>@((MarkupString)Loc["HTMLMoreInfoText"].Value)</div>
                             <RadzenColumn Size="12">
                                 <RadzenRow>
                                     <RadzenColumn Size="12" SizeSM="6">
@@ -35,15 +37,21 @@
                                 </RadzenRow>
                             </RadzenColumn>
                             <RadzenColumn Size="12">
+                                <div>@Loc["ExclusionPeriodText"]</div>
                                 <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" Text="@Loc["AddPeriodLabel"]" Click="@InsertRow" />
-                                <RadzenDataGrid @ref="outOfCountryDataGrid" TItem="Period" Data="@SelectedProfile?.OutOfCountry" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow">
+                                <RadzenDataGrid @ref="outOfCountryDataGrid" TItem="Period" Data="@SelectedProfile?.OutOfCountry" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" AllowSorting="true">
                                     <Columns>
-                                        <RadzenDataGridColumn Title="@Loc["TablePeriodBeginHeaderTitle"]" Property="Begin" FormatString="{0:d}">
+                                        <RadzenDataGridColumn Title="@Loc["TablePeriodNameHeaderTitle"]" MinWidth="100px" Property="Name">
+                                            <EditTemplate Context="period">
+                                                <RadzenTextBox @bind-Value="period.Name" Style="width:100%; display: block;" />
+                                            </EditTemplate>
+                                        </RadzenDataGridColumn>
+                                        <RadzenDataGridColumn Title="@Loc["TablePeriodBeginHeaderTitle"]" Sortable="true" Width="150px" Property="Begin" FormatString="{0:d}">
                                             <EditTemplate Context="period">
                                                 <RadzenDatePicker @bind-Value="period.Begin" DateFormat="d" Style="width:100%; display: block;" />
                                             </EditTemplate>
                                         </RadzenDataGridColumn>
-                                        <RadzenDataGridColumn Title="@Loc["TablePeriodEndHeaderTitle"]" Property="End" FormatString="{0:d}">
+                                        <RadzenDataGridColumn Title="@Loc["TablePeriodEndHeaderTitle"]" Width="150px" Property="End" FormatString="{0:d}">
                                             <EditTemplate Context="period">
                                                 <RadzenDatePicker @bind-Value="period.End" DateFormat="d" Style="width:100%; display: block;" />
                                             </EditTemplate>
