@@ -63,7 +63,58 @@
                 }
                 projectedDate = projectedDate.AddDays(1);
             }
-            return new CitizenshipResult((int)Math.Floor(temporaryDays), temporaryDate, prDays, (int)Math.Floor(remainingDays), projectedDate);
+            List<Period> periods = [];
+            for (DateTime current = temporaryDate; current < projectedDate;)
+            {
+                Period? closestNext = profile.OutOfCountry.Where(ooc => ooc.Begin != ooc.End && ooc.Begin >= current).OrderBy(ooc => ooc.Begin).FirstOrDefault();
+                if (closestNext is null)
+                {
+                    // Reached the end
+                    periods.Add(new Period
+                    {
+                        Name = current > prBeginDate ? "PR" : "Temporary",
+                        Begin = current,
+                        End = projectedDate
+                    });
+                    current = projectedDate;
+                }
+                else if (closestNext.Begin < prBeginDate)
+                {
+                    // Before PR
+                    periods.Add(new Period
+                    {
+                        Name = "Temporary",
+                        Begin = current,
+                        End = closestNext.Begin
+                    });
+                    current = closestNext.End;
+                }
+                else
+                {
+                    // Need to split if period both Temporary and PR
+                    if (current < prBeginDate)
+                    {
+                        periods.Add(new Period
+                        {
+                            Name = "Temporary",
+                            Begin = current,
+                            End = prBeginDate.AddDays(-1)
+                        });
+                        current = prBeginDate;
+                    }
+                    else
+                    {
+                        periods.Add(new Period
+                        {
+                            Name = "PR",
+                            Begin = current,
+                            End = closestNext.Begin
+                        });
+                        current = closestNext.End;
+                    }
+                }
+            }
+            return new CitizenshipResult((int)Math.Floor(temporaryDays), temporaryDate, prDays, (int)Math.Floor(remainingDays), projectedDate, periods.ToArray());
         }
     }
 }

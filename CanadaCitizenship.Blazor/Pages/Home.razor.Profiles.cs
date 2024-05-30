@@ -10,6 +10,7 @@ namespace CanadaCitizenship.Blazor.Pages
     public partial class Home
     {
         private const string STORAGE_PROFILES_KEY = "Profiles";
+        private const string STORAGE_CURRENT_PROFILE_KEY = "CurrentProfile";
 
         public ObservableCollection<Profile> Profiles { get; set; } = [Profile.Default];
         Profile _selectedProfile;
@@ -25,6 +26,7 @@ namespace CanadaCitizenship.Blazor.Pages
                     _selectedProfile = value;
                     if (_selectedProfile is not null)
                     {
+                        LocalStorageService.SetItemAsStringAsync(STORAGE_CURRENT_PROFILE_KEY, _selectedProfile.Name);
                         _selectedProfile.PropertyChanged += SelectedProfile_PropertyChanged;
                         Compute();
                     }

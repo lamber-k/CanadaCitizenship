@@ -181,6 +181,6 @@
     <value>Please see &lt;a href="https://eservices.cic.gc.ca/rescalc/resCalcStartNew.do?lang=en" target="_blank"&gt;Physical Presence Calculator&lt;/a&gt; for more details.</value>
   </data>
   <data name="ExclusionPeriodText" xml:space="preserve">
-    <value>Please add all the past and future periods that needs to be excluded (i.e you were not physically in Canada, or did not have a valid temporary status).</value>
+    <value>Please add all the past and future periods that needs to be excluded (i.e you were not physically in Canada, or did not have a valid temporary status). The begin and end date will be considered valid.</value>
   </data>
 </root>

@@ -175,12 +175,12 @@
     <value>Changer Langue</value>
   </data>
   <data name="IntroText" xml:space="preserve">
-    <value>Cet outil vous permet de déterminer le nombre de jour pouvant être considérés lors de votre application pour la citoyenneté. Attention: Cet outil n'est pas officiel et vous donnera seulement des estimations.</value>
+    <value>Cet outil vous permet de déterminer le nombre de jours pouvant être considérés lors de votre application pour la citoyenneté. Attention: Cet outil n'est pas officiel et vous donnera seulement des estimations.</value>
   </data>
   <data name="HTMLMoreInfoText" xml:space="preserve">
     <value>Pour plus d'informations, référez-vous à &lt;a href="https://eservices.cic.gc.ca/rescalc/resCalcStartNew.do?lang=fr" target="_blank"&gt;Calculatrice de la période de présence effective&lt;/a&gt;.</value>
   </data>
   <data name="ExclusionPeriodText" xml:space="preserve">
-    <value>Ajoutez toutes les périodes passées et futures qui doivent être exclues (càd non présent physiquement au canada ou sans statut temporaire valide).</value>
+    <value>Ajoutez toutes les périodes passées et futures qui doivent être exclues (càd non présent physiquement au Canada ou sans statut temporaire valide). La date de début et de fin sont comptés comme étant valide.</value>
   </data>
 </root>

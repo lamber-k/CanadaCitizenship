@@ -6,6 +6,7 @@ using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
 using System.Collections.ObjectModel;
+using System.Drawing;
 
 namespace CanadaCitizenship.Blazor.Pages
 {
@@ -35,7 +36,8 @@ namespace CanadaCitizenship.Blazor.Pages
         protected override async Task OnInitializedAsync()
         {
             Profiles = new ObservableCollection<Profile>(await LocalStorageService.GetItemAsync<List<Profile>>(STORAGE_PROFILES_KEY) ?? [Profile.Default]);
-            SelectedProfile = Profiles.First();
+            string? profileName = await LocalStorageService.GetItemAsStringAsync(STORAGE_CURRENT_PROFILE_KEY);
+            SelectedProfile = Profiles.FirstOrDefault(p => p.Name == profileName) ?? Profiles.First();
             Profiles.CollectionChanged += Profiles_CollectionChanged;
         }
 
@@ -54,6 +56,7 @@ namespace CanadaCitizenship.Blazor.Pages
         async Task SaveRow(Period period)
         {
             await outOfCountryDataGrid.UpdateRow(period);
+            Compute();
         }
 
         void CancelEdit(Period period)
@@ -62,6 +65,7 @@ namespace CanadaCitizenship.Blazor.Pages
             ToCreate = null;
 
             outOfCountryDataGrid.CancelEditRow(period);
+            Compute();
         }
 
         public async Task DeleteRow(Period period)
@@ -69,6 +73,7 @@ namespace CanadaCitizenship.Blazor.Pages
             SelectedProfile.OutOfCountry.Remove(period);
             await SaveProfiles();
             await outOfCountryDataGrid.Reload();
+            Compute();
         }
 
         public Task OnUpdateRow() => SaveProfiles();
@@ -80,6 +85,7 @@ namespace CanadaCitizenship.Blazor.Pages
                 SelectedProfile.OutOfCountry.Add(ToCreate);
                 ToCreate = null;
                 await SaveProfiles();
+                Compute();
             }
         }
 
@@ -137,6 +143,33 @@ namespace CanadaCitizenship.Blazor.Pages
             catch (InvalidOperationException iex) when (Messages.ResourceManager.GetString(iex.Message) is not null)
             {
                 NotificationService.Notify(NotificationSeverity.Error, "Result", Messages.ResourceManager.GetString(iex.Message));
+            }
+        }
+
+        public void ComputeDateResult(DateRenderEventArgs args)
+        {
+            if (Result is not null)
+            {
+                if (args.Date < Result.StartTemporary || args.Date > Result.ProjectedDate)
+                {
+                    // Outside the range
+                    args.Disabled = true;
+                }
+                else if (args.Date == Result.ProjectedDate)
+                {
+                    args.Attributes.Add("style", $"background-color: #E91E63");
+                }
+                else
+                {
+                    Period? found = Result.Periods.FirstOrDefault(p => args.Date >= p.Begin && args.Date <= p.End);
+                    string bgColor = found switch
+                    {
+                        { Name: "Temporary" } => "#E1BEE7",
+                        { Name: "PR" } => "#F8BBD0",
+                        _ => "#9E9E9E"
+                    };
+                    args.Attributes.Add("style", $"background-color: {bgColor}");
+                }
             }
         }
     }
