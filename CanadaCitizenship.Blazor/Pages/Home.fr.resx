@@ -97,22 +97,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SwitchBtn" xml:space="preserve">
-    <value>Switch</value>
+  <data name="Title" xml:space="preserve">
+    <value>Calculateur Citoyenneté Canada</value>
   </data>
-  <data name="CancelBtn" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="ParametersSectionHeader" xml:space="preserve">
+    <value>Paramètres</value>
   </data>
-  <data name="CultureOptionRequiredText" xml:space="preserve">
-    <value>You must select a language</value>
+  <data name="FirstEntryLabel" xml:space="preserve">
+    <value>Date d'entrée</value>
   </data>
-  <data name="CultureOptionFieldText" xml:space="preserve">
-    <value>Culture Selection</value>
+  <data name="PRLabel" xml:space="preserve">
+    <value>Date Résidence permanente</value>
   </data>
-  <data name="Lang_fr" xml:space="preserve">
-    <value>French</value>
+  <data name="AddPeriodLabel" xml:space="preserve">
+    <value>Ajouter Période</value>
   </data>
-  <data name="Lang_en" xml:space="preserve">
-    <value>English</value>
+  <data name="TablePeriodBeginHeaderTitle" xml:space="preserve">
+    <value>Début</value>
+  </data>
+  <data name="TablePeriodEndHeaderTitle" xml:space="preserve">
+    <value>Fin</value>
+  </data>
+  <data name="ResultSection" xml:space="preserve">
+    <value>Résultat</value>
+  </data>
+  <data name="TablePeriodActionHeaderTitle" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="TablePeriodNotesHeaderTitle" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Header" xml:space="preserve">
+    <value>Calculateur Citoyenneté Canada</value>
+  </data>
+  <data name="DialogCreateProfileTitle" xml:space="preserve">
+    <value>Créer Profile</value>
+  </data>
+  <data name="DialogImportProfilesTitle" xml:space="preserve">
+    <value>Importer Profiles</value>
+  </data>
+  <data name="DialogSwitchCultureTitle" xml:space="preserve">
+    <value>Sélecteur de Langue</value>
+  </data>
+  <data name="ContextMenuNewProfileText" xml:space="preserve">
+    <value>Ajouter Profile</value>
+  </data>
+  <data name="ContextMenuDeleteProfileText" xml:space="preserve">
+    <value>Supprimer Profile</value>
+  </data>
+  <data name="ContextMenuImportProfilesText" xml:space="preserve">
+    <value>Importer Profiles</value>
+  </data>
+  <data name="ContextMenuSaveProfilesText" xml:space="preserve">
+    <value>Sauvegarder Profiles</value>
+  </data>
+  <data name="ContextMenuSwitchCultureText" xml:space="preserve">
+    <value>Changer Langue</value>
   </data>
 </root>

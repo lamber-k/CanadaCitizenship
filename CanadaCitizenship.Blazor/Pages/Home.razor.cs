@@ -89,11 +89,11 @@ namespace CanadaCitizenship.Blazor.Pages
             ContextMenuService.Open(args,
             [
                 .. Profiles.Select(p => new ContextMenuItem() { Text = p.Name, Value = string.Concat("user_", p.Name), Icon = "account_circle" }),
-                new ContextMenuItem(){ Text = "New Profile", Value = "profile_add", Icon = "add" },
-                new ContextMenuItem(){ Text = "Delete Profile", Value = "profile_delete", Icon = "delete" },
-                new ContextMenuItem(){ Text = "Import Profiles", Value = "profile_import", Icon = "file_upload" },
-                new ContextMenuItem(){ Text = "Save Profile", Value = "profile_export", Icon = "save" },
-                new ContextMenuItem(){ Text = "Switch Language", Value = "switch_culture", Icon = "language" },
+                new ContextMenuItem(){ Text = Loc["ContextMenuNewProfileText"], Value = "profile_add", Icon = "add" },
+                new ContextMenuItem(){ Text = Loc["ContextMenuDeleteProfileText"], Value = "profile_delete", Icon = "delete" },
+                new ContextMenuItem(){ Text = Loc["ContextMenuImportProfilesText"], Value = "profile_import", Icon = "file_upload" },
+                new ContextMenuItem(){ Text = Loc["ContextMenuSaveProfilesText"], Value = "profile_export", Icon = "save" },
+                new ContextMenuItem(){ Text = Loc["ContextMenuSwitchCultureText"], Value = "switch_culture", Icon = "language" },
             ], OnMenuClick);
         }
 
@@ -126,7 +126,7 @@ namespace CanadaCitizenship.Blazor.Pages
 
         public async Task SwitchCulture()
         {
-            await DialogService.OpenSideAsync<SwitchCulture>("Switch Culture");
+            await DialogService.OpenSideAsync<SwitchCulture>(Loc["DialogSwitchCultureTitle"]);
         }
 
         public void Compute()

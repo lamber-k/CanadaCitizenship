@@ -97,22 +97,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SwitchBtn" xml:space="preserve">
-    <value>Switch</value>
+  <data name="ProfileNameFieldText" xml:space="preserve">
+    <value>Profile</value>
   </data>
-  <data name="CancelBtn" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="ProfileNameRequiredText" xml:space="preserve">
+    <value>Nom requis</value>
   </data>
-  <data name="CultureOptionRequiredText" xml:space="preserve">
-    <value>You must select a language</value>
+  <data name="ProfileNameUniqueValidatorText" xml:space="preserve">
+    <value>Un profil avec le meme nom existe</value>
   </data>
-  <data name="CultureOptionFieldText" xml:space="preserve">
-    <value>Culture Selection</value>
-  </data>
-  <data name="Lang_fr" xml:space="preserve">
-    <value>French</value>
-  </data>
-  <data name="Lang_en" xml:space="preserve">
-    <value>English</value>
+  <data name="CreateBtn" xml:space="preserve">
+    <value>Créer</value>
   </data>
 </root>

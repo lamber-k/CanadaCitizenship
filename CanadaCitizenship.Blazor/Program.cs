@@ -19,7 +19,7 @@ builder.Services.AddLocalization();
 
 WebAssemblyHost host = builder.Build();
 
-const string defaultCulture = "en-US";
+const string defaultCulture = "en";
 
 var js = host.Services.GetRequiredService<IJSRuntime>();
 var result = await js.InvokeAsync<string>("appCulture.get");

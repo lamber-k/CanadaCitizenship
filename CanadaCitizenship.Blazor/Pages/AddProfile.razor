@@ -1,13 +1,15 @@
-﻿<RadzenStack>
+﻿@inject IStringLocalizer<AddProfile> Loc
+
+<RadzenStack>
     <RadzenTemplateForm TItem="AddProfileModel" Data="Model" Submit="CreateProfile">
         <RadzenColumn>
-            <RadzenFormField class="w-100" Text="Profile Name" Variant="Variant.Filled">
+            <RadzenFormField class="w-100" Text="@Loc["ProfileNameFieldText"]" Variant="Variant.Filled">
                 <RadzenTextBox Name="ProfileName" @bind-Value="@Model.Name" />
             </RadzenFormField>
-            <RadzenRequiredValidator Component="ProfileName" Text="Profile Name is required" />
-            <RadzenCustomValidator Component="ProfileName" Validator="SameProfileNameValidator" Text="A Profile with the same name already exists" />
+            <RadzenRequiredValidator Component="ProfileName" Text="@Loc["ProfileNameRequiredText"]" />
+            <RadzenCustomValidator Component="ProfileName" Validator="SameProfileNameValidator" Text="@Loc["ProfileNameUniqueValidatorText"]" />
         </RadzenColumn>
-        <RadzenButton class="float-end mt-1" ButtonType="ButtonType.Submit">Create</RadzenButton>
+        <RadzenButton class="float-end mt-1" ButtonType="ButtonType.Submit">@Loc["CreateBtn"]</RadzenButton>
     </RadzenTemplateForm>
 </RadzenStack>
 

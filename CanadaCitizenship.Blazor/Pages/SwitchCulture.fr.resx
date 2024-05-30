@@ -100,4 +100,19 @@
   <data name="SwitchBtn" xml:space="preserve">
     <value>Changer</value>
   </data>
+  <data name="CancelBtn" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="CultureOptionRequiredText" xml:space="preserve">
+    <value>Veuillez selectioner une langue</value>
+  </data>
+  <data name="CultureOptionFieldText" xml:space="preserve">
+    <value>Selection langue</value>
+  </data>
+  <data name="Lang_fr" xml:space="preserve">
+    <value>Français</value>
+  </data>
+  <data name="Lang_en" xml:space="preserve">
+    <value>Anglais</value>
+  </data>
 </root>

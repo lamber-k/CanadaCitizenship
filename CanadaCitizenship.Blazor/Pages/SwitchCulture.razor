@@ -5,33 +5,52 @@
 @inject IStringLocalizer<SwitchCulture> Loc
 
 <RadzenStack>
-    <RadzenTemplateForm TItem="CultureInfo" Data="SelectedCulture" Submit="@ApplySwitchCulture">
+    <RadzenTemplateForm TItem="CultureModel" Data="SelectedCulture" Submit="@ApplySwitchCulture">
         <RadzenColumn>
-            <RadzenFormField class="w-100" Text="Culture Selection" Variant="Variant.Filled">
-                <RadzenDropDown Name="CultureOption" TValue="CultureInfo" TextProperty="DisplayName" @bind-Value="@SelectedCulture" Data="@AvailableCulture" />
+            <RadzenFormField class="w-100" Text="@Loc["CultureOptionFieldText"]" Variant="Variant.Filled">
+                <RadzenDropDown Name="CultureOption" TValue="string" ValueProperty="Code" @bind-Value="@SelectedCulture.Code" Data="@AvailableCulture">
+                    <Template Context="ctx">@Loc[ctx.LocalizedKey]</Template>
+                    <ValueTemplate Context="ctx">@Loc[ctx.LocalizedKey]</ValueTemplate>
+                </RadzenDropDown>
             </RadzenFormField>
-            <RadzenRequiredValidator Component="CultureOption" Text="You must select a language" />
+            <RadzenRequiredValidator Component="CultureOption" Text="@Loc["CultureOptionRequiredText"]" />
         </RadzenColumn>
-        <RadzenButton class="float-end mt-1" ButtonType="ButtonType.Submit">@Loc["SwitchBtn"]</RadzenButton>
-        <RadzenButton class="float-end mt-1" ButtonType="ButtonType.Reset">Cancel</RadzenButton>
+        <RadzenRow class="mt-1" Gap="1rem" JustifyContent="JustifyContent.End">
+            <RadzenButton ButtonType="ButtonType.Submit">@Loc["SwitchBtn"]</RadzenButton>
+            <RadzenButton ButtonType="ButtonType.Reset">@Loc["CancelBtn"]</RadzenButton>
+        </RadzenRow>
+        
     </RadzenTemplateForm>
 </RadzenStack>
 
 
 @code {
-    CultureInfo? SelectedCulture = CultureInfo.CurrentCulture;
+    class CultureModel
+    {
+        public required string Code { get; set; }
+        public string LocalizedKey => string.Concat("Lang_", Code);
+    }
+    CultureModel SelectedCulture = new CultureModel
+        {
+            Code = CultureInfo.CurrentCulture.TwoLetterISOLanguageName
+        };
 
-    private readonly CultureInfo[] AvailableCulture = 
-    [
-        new CultureInfo("fr"),
-        new CultureInfo("en"),
-    ];
+    private readonly CultureModel[] AvailableCulture;
+
+    public SwitchCulture()
+    {
+        AvailableCulture =
+        [
+            new CultureModel { Code = "fr" },
+            new CultureModel { Code = "en" }
+        ];
+    }
 
     public async Task ApplySwitchCulture()
     {
-        if (SelectedCulture is not null && SelectedCulture != CultureInfo.CurrentCulture)
+        if (SelectedCulture is not null && SelectedCulture.Code != CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
         {
-            await LocalStorageService.SetItemAsStringAsync("AppCulture", SelectedCulture.Name);
+            await LocalStorageService.SetItemAsStringAsync("AppCulture", SelectedCulture.Code);
             Navigation.NavigateTo(Navigation.Uri, true);
         }
     }

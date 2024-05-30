@@ -57,7 +57,7 @@ namespace CanadaCitizenship.Blazor.Pages
 
         public async Task AddProfile()
         {
-            var result = await DialogService.OpenAsync<AddProfile>("Create Profile", new Dictionary<string, object>() { { "Profiles", Profiles } });
+            var result = await DialogService.OpenAsync<AddProfile>(Loc["DialogCreateProfileTitle"], new Dictionary<string, object>() { { "Profiles", Profiles } });
             if (result is Profile newProfile)
             {
                 Profiles.Add(newProfile);
@@ -67,7 +67,7 @@ namespace CanadaCitizenship.Blazor.Pages
 
         public async Task ImportProfiles()
         {
-            var result = await DialogService.OpenAsync<ImportProfiles>("Import Profile");
+            var result = await DialogService.OpenAsync<ImportProfiles>(Loc["DialogImportProfilesTitle"]);
             if (result is List<Profile> loadedProfiles)
             {
                 Profiles.CollectionChanged -= Profiles_CollectionChanged;

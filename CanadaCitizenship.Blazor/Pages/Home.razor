@@ -1,13 +1,14 @@
-﻿@page "/"
+﻿@inject IStringLocalizer<Home> Loc
+@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>@Loc["Title"]</PageTitle>
 
 <RadzenLayout>
     <RadzenHeader class="p-1">
         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.End">
             <div>
-            <RadzenImage Path="favicon.png" Style="height: 32px; width:32px"></RadzenImage>
-            <RadzenLabel>Canada Citizenship Calculator</RadzenLabel>
+                <RadzenImage Path="favicon.png" Style="height: 32px; width:32px"></RadzenImage>
+                <RadzenLabel>@Loc["Header"]</RadzenLabel>
             </div>
             <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="menu" Click="@OpenContextMenu" Text="@SelectedProfile.Name"></RadzenButton>
         </RadzenStack>
@@ -16,38 +17,38 @@
         <RadzenRow>
             <RadzenColumn Size="12" Visible="@(SelectedProfile is not null)">
                 <RadzenFieldset AllowCollapse="true">
-                    <HeaderTemplate><RadzenLabel>Parameters</RadzenLabel></HeaderTemplate>
+                    <HeaderTemplate><RadzenLabel>@Loc["ParametersSectionHeader"]</RadzenLabel></HeaderTemplate>
                     <ChildContent>
                         <RadzenRow Gap="1rem">
                             <RadzenColumn Size="12">
                                 <RadzenRow>
                                     <RadzenColumn Size="12" SizeSM="6">
-                                        <RadzenFormField Text="First Entry" Variant="Variant.Filled">
+                                        <RadzenFormField Text="@Loc["FirstEntryLabel"]" Variant="Variant.Filled">
                                             <RadzenDatePicker DateFormat="d" @bind-Value="@SelectedProfile!.TemporaryDate" TValue="DateTime?"></RadzenDatePicker>
                                         </RadzenFormField>
                                     </RadzenColumn>
                                     <RadzenColumn Size="12" SizeSM="6">
-                                        <RadzenFormField Text="Permanent Residency" Variant="Variant.Filled">
+                                        <RadzenFormField Text="@Loc["PRLabel"]" Variant="Variant.Filled">
                                             <RadzenDatePicker DateFormat="d" @bind-Value="@SelectedProfile!.PRDate" TValue="DateTime?"></RadzenDatePicker>
                                         </RadzenFormField>
                                     </RadzenColumn>
                                 </RadzenRow>
                             </RadzenColumn>
                             <RadzenColumn Size="12">
-                                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" Text="Add Period" Click="@InsertRow" />
+                                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" Text="@Loc["AddPeriodLabel"]" Click="@InsertRow" />
                                 <RadzenDataGrid @ref="outOfCountryDataGrid" TItem="Period" Data="@SelectedProfile?.OutOfCountry" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow">
                                     <Columns>
-                                        <RadzenDataGridColumn Title="Begin" Property="Begin" FormatString="{0:d}">
+                                        <RadzenDataGridColumn Title="@Loc["TablePeriodBeginHeaderTitle"]" Property="Begin" FormatString="{0:d}">
                                             <EditTemplate Context="period">
                                                 <RadzenDatePicker @bind-Value="period.Begin" DateFormat="d" Style="width:100%; display: block;" />
                                             </EditTemplate>
                                         </RadzenDataGridColumn>
-                                        <RadzenDataGridColumn Title="End" Property="End" FormatString="{0:d}">
+                                        <RadzenDataGridColumn Title="@Loc["TablePeriodEndHeaderTitle"]" Property="End" FormatString="{0:d}">
                                             <EditTemplate Context="period">
                                                 <RadzenDatePicker @bind-Value="period.End" DateFormat="d" Style="width:100%; display: block;" />
                                             </EditTemplate>
                                         </RadzenDataGridColumn>
-                                        <RadzenDataGridColumn Frozen="true" FrozenPosition="FrozenColumnPosition.Right" Width="160px" Title="Actions">
+                                        <RadzenDataGridColumn Frozen="true" FrozenPosition="FrozenColumnPosition.Right" Width="160px" Title="@Loc["TablePeriodActionHeaderTitle"]">
                                             <Template Context="period">
                                                 <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(period))" @onclick:stopPropagation="true">
                                                 </RadzenButton>
@@ -74,7 +75,7 @@
         <RadzenRow Visible="@(Result is not null)">
             <RadzenColumn Size="12">
                 <RadzenFieldset AllowCollapse="true">
-                    <HeaderTemplate><RadzenLabel>Result</RadzenLabel></HeaderTemplate>
+                    <HeaderTemplate><RadzenLabel>@Loc["ResultSection"]</RadzenLabel></HeaderTemplate>
                     <ChildContent>
                         <RadzenColumn Size="12">
                             <RadzenLabel>@string.Format(Messages.BeginTemporaryFormat, Result!.StartTemporary)</RadzenLabel>
