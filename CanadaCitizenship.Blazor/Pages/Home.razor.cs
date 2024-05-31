@@ -165,8 +165,8 @@ namespace CanadaCitizenship.Blazor.Pages
                     string bgColor = found switch
                     {
                         { Name: "Temporary" } => "#E1BEE7",
-                        { Name: "PR" } => "#F8BBD0",
-                        _ => "#9E9E9E"
+                        { Name: "PR" } => "#40C4FF",
+                        _ => "#607D8B"
                     };
                     args.Attributes.Add("style", $"background-color: {bgColor}");
                 }

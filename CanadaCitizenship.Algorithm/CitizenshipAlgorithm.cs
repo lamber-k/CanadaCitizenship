@@ -63,16 +63,23 @@
                 }
                 projectedDate = projectedDate.AddDays(1);
             }
+            List<Period> periods = GenerateValidPeriods(profile, prBeginDate, temporaryDate, projectedDate);
+            return new CitizenshipResult((int)Math.Floor(temporaryDays), temporaryDate, prDays, (int)Math.Floor(remainingDays), projectedDate, periods.ToArray());
+        }
+
+        private static List<Period> GenerateValidPeriods(Profile profile, DateTime prBeginDate, DateTime temporaryDate, DateTime projectedDate)
+        {
             List<Period> periods = [];
+            Queue<Period> exclusions = new Queue<Period>(profile.OutOfCountry.OrderBy(ooc => ooc.Begin));
             for (DateTime current = temporaryDate; current < projectedDate;)
             {
-                Period? closestNext = profile.OutOfCountry.Where(ooc => ooc.Begin != ooc.End && ooc.Begin >= current).OrderBy(ooc => ooc.Begin).FirstOrDefault();
-                if (closestNext is null)
+                if (!exclusions.TryDequeue(out Period? closestNext))
                 {
                     // Reached the end
+                    //|-----PR---^---|
                     periods.Add(new Period
                     {
-                        Name = current > prBeginDate ? "PR" : "Temporary",
+                        Name = "PR",
                         Begin = current,
                         End = projectedDate
                     });
@@ -81,6 +88,8 @@
                 else if (closestNext.Begin < prBeginDate)
                 {
                     // Before PR
+                    //|-^--b--e-PR----|
+                    //|-^---b---PR-e--|
                     periods.Add(new Period
                     {
                         Name = "Temporary",
@@ -94,27 +103,35 @@
                     // Need to split if period both Temporary and PR
                     if (current < prBeginDate)
                     {
+                        //|-----^---PR-b----e--|
                         periods.Add(new Period
                         {
                             Name = "Temporary",
                             Begin = current,
                             End = prBeginDate.AddDays(-1)
                         });
-                        current = prBeginDate;
+                        periods.Add(new Period
+                        {
+                            Name = "PR",
+                            Begin = prBeginDate,
+                            End = closestNext.Begin
+                        });
                     }
                     else
                     {
+                        //|----PR-^--b----e--|
                         periods.Add(new Period
                         {
                             Name = "PR",
                             Begin = current,
                             End = closestNext.Begin
                         });
-                        current = closestNext.End;
                     }
+                    current = closestNext.End;
                 }
             }
-            return new CitizenshipResult((int)Math.Floor(temporaryDays), temporaryDate, prDays, (int)Math.Floor(remainingDays), projectedDate, periods.ToArray());
+
+            return periods;
         }
     }
 }

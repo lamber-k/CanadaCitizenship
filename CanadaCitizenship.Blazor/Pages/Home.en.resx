@@ -181,6 +181,6 @@
     <value>Please see &lt;a href="https://eservices.cic.gc.ca/rescalc/resCalcStartNew.do?lang=en" target="_blank"&gt;Physical Presence Calculator&lt;/a&gt; for more details.</value>
   </data>
   <data name="ExclusionPeriodText" xml:space="preserve">
-    <value>Please add all the past and future periods that needs to be excluded (i.e you were not physically in Canada, or did not have a valid temporary status). The begin and end date will be considered valid.</value>
+    <value>Please add all the past and future periods that needs to be excluded (i.e you were not physically in Canada, or did not have a valid temporary status). The begin and end date are considered to be in Canada. Example: Leaving Canada from 2024-05-28 to 2024-06-12. For both May 28th and  June 12th, you are considered in Canada as you are leaving/returning at these dates.</value>
   </data>
 </root>

@@ -181,6 +181,6 @@
     <value>Pour plus d'informations, référez-vous à &lt;a href="https://eservices.cic.gc.ca/rescalc/resCalcStartNew.do?lang=fr" target="_blank"&gt;Calculatrice de la période de présence effective&lt;/a&gt;.</value>
   </data>
   <data name="ExclusionPeriodText" xml:space="preserve">
-    <value>Ajoutez toutes les périodes passées et futures qui doivent être exclues (càd non présent physiquement au Canada ou sans statut temporaire valide). La date de début et de fin sont comptés comme étant valide.</value>
+    <value>Ajoutez toutes les périodes passées et futures qui doivent être exclues (càd non présent physiquement au Canada ou sans statut temporaire valide). La date de début et de fin sont considérés comme présence effective au Canada. Exemple: Quitter le territoire du 2024-05-28 au 2024-06-12. Le 28 mai et le 12 juin seront considérés comme présence effective au Canada.</value>
   </data>
 </root>
