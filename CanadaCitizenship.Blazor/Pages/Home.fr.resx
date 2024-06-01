@@ -183,4 +183,55 @@
   <data name="ExclusionPeriodText" xml:space="preserve">
     <value>Ajoutez toutes les périodes passées et futures qui doivent être exclues (càd non présent physiquement au Canada ou sans statut temporaire valide). La date de début et de fin sont considérés comme présence effective au Canada. Exemple: Quitter le territoire du 2024-05-28 au 2024-06-12. Le 28 mai et le 12 juin seront considérés comme présence effective au Canada.</value>
   </data>
+  <data name="ErrorMenuClickAction" xml:space="preserve">
+    <value>{0} a échoué.</value>
+  </data>
+  <data name="ErrorMenuClickActionTitle" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="ErrorComputationTitle" xml:space="preserve">
+    <value>Résultat</value>
+  </data>
+  <data name="TablePeriodTypeHeaderTitle" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="ExclusionPeriodDeleteConfirmText" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir supprimer cette période ?</value>
+  </data>
+  <data name="ExclusionPeriodDeleteConfirmTitle" xml:space="preserve">
+    <value>Supprimer période</value>
+  </data>
+  <data name="CancelBtn" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="ConfirmBtn" xml:space="preserve">
+    <value>Confirmer</value>
+  </data>
+  <data name="ProfileDeleteConfirmText" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir supprimer ce profile ?</value>
+  </data>
+  <data name="ProfileDeleteConfirmTitle" xml:space="preserve">
+    <value>Supprimer profile</value>
+  </data>
+  <data name="EnumPeriodVacation" xml:space="preserve">
+    <value>Vacances</value>
+  </data>
+  <data name="EnumPeriodNone" xml:space="preserve">
+    <value>Aucun</value>
+  </data>
+  <data name="EnumPeriodPR" xml:space="preserve">
+    <value>Résident Permanent</value>
+  </data>
+  <data name="EnumPeriodTemporary" xml:space="preserve">
+    <value>Détenteur permis valide</value>
+  </data>
+  <data name="EnumPeriodTourist" xml:space="preserve">
+    <value>Statut touriste</value>
+  </data>
+  <data name="EnumPeriodNoStatus" xml:space="preserve">
+    <value>Aucun statut</value>
+  </data>
+  <data name="EnumPeriodOther" xml:space="preserve">
+    <value>Autre</value>
+  </data>
 </root>

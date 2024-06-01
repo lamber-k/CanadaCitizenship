@@ -39,21 +39,33 @@
                             <RadzenColumn Size="12">
                                 <div>@Loc["ExclusionPeriodText"]</div>
                                 <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" Text="@Loc["AddPeriodLabel"]" Click="@InsertRow" />
-                                <RadzenDataGrid id="outOfCountryDataGrid" @ref="outOfCountryDataGrid" TItem="Period" Data="@SelectedProfile?.OutOfCountry" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" AllowSorting="true">
+                                <RadzenDataGrid id="excludedPeriodsDataGrid" @ref="excludedPeriodsDataGrid" TItem="Period" Data="@SelectedProfile!.ExclusionPeriods" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" AllowSorting="true">
                                     <Columns>
                                         <RadzenDataGridColumn Title="@Loc["TablePeriodNameHeaderTitle"]" Width="100%" MinWidth="100px" Property="Name" Sortable="false">
                                             <EditTemplate Context="period">
                                                 <RadzenTextBox @bind-Value="period.Name" Style="min-width:200px; display: block;" />
                                             </EditTemplate>
                                         </RadzenDataGridColumn>
+                                        <RadzenDataGridColumn Title="@Loc["TablePeriodTypeHeaderTitle"]" Width="100px" Property="Type" Sortable="false">
+                                            <Template>@Loc[string.Concat("EnumPeriod", Enum.GetName(typeof(PeriodType), context.Type))]</Template>
+                                            <EditTemplate Context="period">
+                                                <RadzenDropDown Data="@PeriodTypes" TValue="PeriodType" @bind-Value="period.Type" Name="PeriodTypeComponent">
+                                                    <Template>@Loc[string.Concat("EnumPeriod", Enum.GetName(typeof(PeriodType), context))]</Template>
+                                                </RadzenDropDown>
+                                            </EditTemplate>
+                                        </RadzenDataGridColumn>
                                         <RadzenDataGridColumn Title="@Loc["TablePeriodBeginHeaderTitle"]" Sortable="true" Width="150px" Property="Begin" FormatString="{0:d}" SortOrder="SortOrder.Descending">
                                             <EditTemplate Context="period">
-                                                <RadzenDatePicker @bind-Value="period.Begin" DateFormat="d" Style="width:150px; display: block;" />
+                                                <RadzenDatePicker Name="BeginPeriodComponent" @bind-Value="period.Begin" Max="period.End" DateFormat="d" Style="width:150px; display: block;" />
+                                                <RadzenRequiredValidator Component="BeginPeriodComponent" Text="@Loc["BeginRequired"]" />
+                                                <RadzenCompareValidator Component="BeginPeriodComponent" Operator="CompareOperator.LessThanEqual" Value="@period.End" Text="@Loc["BeginDateLEThanEnd"]" />
                                             </EditTemplate>
                                         </RadzenDataGridColumn>
                                         <RadzenDataGridColumn Title="@Loc["TablePeriodEndHeaderTitle"]" Width="150px" Property="End" FormatString="{0:d}" Sortable="false">
                                             <EditTemplate Context="period">
-                                                <RadzenDatePicker @bind-Value="period.End" DateFormat="d" Style="width:150px; display: block;" />
+                                                <RadzenDatePicker Name="EndPeriodComponent" @bind-Value="period.End" Min="period.End" DateFormat="d" Style="width:150px; display: block;" />
+                                                <RadzenRequiredValidator Component="EndPeriodComponent" Text="@Loc["EndRequired"]" />
+                                                <RadzenCompareValidator Component="EndPeriodComponent" Operator="CompareOperator.GreaterThanEqual" Value="@period.Begin" Text="@Loc["EndDateGThanBegin"]" />
                                             </EditTemplate>
                                         </RadzenDataGridColumn>
                                         <RadzenDataGridColumn FrozenPosition="FrozenColumnPosition.Right" Title="@Loc["TablePeriodActionHeaderTitle"]" MinWidth="100px" Sortable="false">
@@ -101,7 +113,7 @@
                             <RadzenLabel>@string.Format(Messages.ProjectedApplyDateFormat, Result!.ProjectedDate)</RadzenLabel>
                         </RadzenColumn>
                         <RadzenColumn Size="12">
-                            <RadzenDatePicker TValue="DateOnly" DateRender="@ComputeDateResult" Inline="true" />
+                            <RadzenDatePicker ReadOnly="true" id="result-viewer-datepicker" TValue="DateOnly" DateRender="@ComputeDateResult" Inline="true" />
                         </RadzenColumn>
                     </ChildContent>
                 </RadzenFieldset>

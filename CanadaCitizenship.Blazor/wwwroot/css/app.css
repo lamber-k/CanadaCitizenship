@@ -102,6 +102,22 @@ code {
     color: #c02d76;
 }
 
-#outOfCountryDataGrid table.rz-grid-table {
+#excludedPeriodsDataGrid table.rz-grid-table {
     width: unset;
+}
+
+#result-viewer-datepicker td[period-type="temporary"] > span {
+    background-color: #E1BEE7;
+}
+
+#result-viewer-datepicker td[period-type="permanent"] > span {
+    background-color: #40C4FF;
+}
+
+#result-viewer-datepicker td[period-type="projected"] > span {
+    background-color: #E91E63;
+}
+
+#result-viewer-datepicker td[period-type="excluded"] > span {
+    background-color: #607D8B;
 }

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BeginTemporaryFormat" xml:space="preserve">
-    <value>Temporary Status start date: {0:d}</value>
+    <value>Considered temporary status start date: {0:d}</value>
   </data>
   <data name="ProjectedApplyDateFormat" xml:space="preserve">
     <value>Projected application date: {0:d}</value>

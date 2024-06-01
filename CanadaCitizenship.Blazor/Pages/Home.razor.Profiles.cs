@@ -13,7 +13,7 @@ namespace CanadaCitizenship.Blazor.Pages
         private const string STORAGE_CURRENT_PROFILE_KEY = "CurrentProfile";
 
         public ObservableCollection<Profile> Profiles { get; set; } = [Profile.Default];
-        Profile _selectedProfile;
+        Profile _selectedProfile = Profile.Default;
         public Profile SelectedProfile
         {
             get => _selectedProfile;
@@ -47,14 +47,22 @@ namespace CanadaCitizenship.Blazor.Pages
             Compute();
         }
 
-        public void ProfileDelete()
+        public async Task ProfileDelete()
         {
-            Profiles.Remove(SelectedProfile);
-            if (!Profiles.Any())
+            bool? result = await DialogService.Confirm(Loc["ProfileDeleteConfirmText"], Loc["ProfileDeleteConfirmTitle"], new ConfirmOptions
             {
-                Profiles.Add(Profile.Default);
+                CancelButtonText = Loc["CancelBtn"],
+                OkButtonText = Loc["ConfirmBtn"],
+            });
+            if (result ?? false)
+            {
+                Profiles.Remove(SelectedProfile);
+                if (!Profiles.Any())
+                {
+                    Profiles.Add(Profile.Default);
+                }
+                SelectedProfile = Profiles.First();
             }
-            SelectedProfile = Profiles.First();
         }
 
         public async Task AddProfile()

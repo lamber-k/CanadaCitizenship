@@ -16,6 +16,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddRadzenComponents();
 builder.Services.AddLocalization();
+builder.Services.AddLogging();
 
 WebAssemblyHost host = builder.Build();
 

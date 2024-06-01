@@ -61,7 +61,7 @@ namespace CanadaCitizenship.Algorithm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Temporary Status start date: {0:d}.
+        ///   Looks up a localized string similar to Considered temporary status start date: {0:d}.
         /// </summary>
         public static string BeginTemporaryFormat {
             get {

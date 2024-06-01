@@ -44,7 +44,7 @@ namespace CanadaCitizenship
             newProfileNameTextBox = new TextBox();
             deleteProfileButton = new Button();
             currentProfileLabel = new Label();
-            outOfCountryDataGrid = new DataGridView();
+            excludedPeriodsDataGrid = new DataGridView();
             Begin = new DataGridViewTextBoxColumn();
             End = new DataGridViewTextBoxColumn();
             Delete = new DataGridViewButtonColumn();
@@ -59,7 +59,7 @@ namespace CanadaCitizenship
             remainingDaysLabel = new Label();
             projectedDateLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)profileBindingSource).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)outOfCountryDataGrid).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)excludedPeriodsDataGrid).BeginInit();
             SuspendLayout();
             // 
             // temporaryDTP
@@ -157,15 +157,15 @@ namespace CanadaCitizenship
             currentProfileLabel.TabIndex = 9;
             currentProfileLabel.Text = "Current Profile";
             // 
-            // outOfCountryDataGrid
+            // excludedPeriodsDataGrid
             // 
-            outOfCountryDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            outOfCountryDataGrid.Columns.AddRange(new DataGridViewColumn[] { Begin, End, Delete });
-            outOfCountryDataGrid.Location = new Point(12, 129);
-            outOfCountryDataGrid.Name = "outOfCountryDataGrid";
-            outOfCountryDataGrid.Size = new Size(383, 209);
-            outOfCountryDataGrid.TabIndex = 10;
-            outOfCountryDataGrid.CellClick += outOfCountryDataGrid_CellClick;
+            excludedPeriodsDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            excludedPeriodsDataGrid.Columns.AddRange(new DataGridViewColumn[] { Begin, End, Delete });
+            excludedPeriodsDataGrid.Location = new Point(12, 129);
+            excludedPeriodsDataGrid.Name = "excludedPeriodsDataGrid";
+            excludedPeriodsDataGrid.Size = new Size(383, 209);
+            excludedPeriodsDataGrid.TabIndex = 10;
+            excludedPeriodsDataGrid.CellClick += excludedPeriodsDataGrid_CellClick;
             // 
             // Begin
             // 
@@ -306,7 +306,7 @@ namespace CanadaCitizenship
             Controls.Add(outOfCountryBeginLabel);
             Controls.Add(OOCEndDTP);
             Controls.Add(OOCBeginDTP);
-            Controls.Add(outOfCountryDataGrid);
+            Controls.Add(excludedPeriodsDataGrid);
             Controls.Add(currentProfileLabel);
             Controls.Add(deleteProfileButton);
             Controls.Add(newProfileNameTextBox);
@@ -322,7 +322,7 @@ namespace CanadaCitizenship
             Text = "Citizenship Calc";
             FormClosing += Form1_FormClosing;
             ((System.ComponentModel.ISupportInitialize)profileBindingSource).EndInit();
-            ((System.ComponentModel.ISupportInitialize)outOfCountryDataGrid).EndInit();
+            ((System.ComponentModel.ISupportInitialize)excludedPeriodsDataGrid).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -340,7 +340,7 @@ namespace CanadaCitizenship
         private Button deleteProfileButton;
         private Label currentProfileLabel;
         private BindingSource profileBindingSource;
-        private DataGridView outOfCountryDataGrid;
+        private DataGridView excludedPeriodsDataGrid;
         private DateTimePicker OOCBeginDTP;
         private DateTimePicker OOCEndDTP;
         private Label outOfCountryBeginLabel;

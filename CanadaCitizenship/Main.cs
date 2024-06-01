@@ -22,7 +22,7 @@ namespace CanadaCitizenship
             }
             profilesComboBox.DisplayMember = nameof(Profile.Name);
             profilesComboBox.DataSource = Profiles;
-            outOfCountryDataGrid.DataSource = OutOfCountry;
+            excludedPeriodsDataGrid.DataSource = OutOfCountry;
             Text = UI.WindowName;
             firstEntryLabel.Text = UI.FirstEntryLabel;
             PRLabel.Text = UI.PermanentResidencyLabel;
@@ -33,10 +33,10 @@ namespace CanadaCitizenship
             deleteProfileButton.Text = UI.DeleteProfileButton;
             AddOOCButton.Text = UI.OutOfCountryAddButton;
             computeButton.Text = UI.ComputeButton;
-            outOfCountryDataGrid.Columns["Begin"].HeaderText = UI.OutOfCountry_Grid_Header_Begin;
-            outOfCountryDataGrid.Columns["End"].HeaderText = UI.OutOfCountry_Grid_Header_End;
-            outOfCountryDataGrid.Columns["Delete"].HeaderText = UI.OutOfCountry_Grid_Header_Delete;
-            ((DataGridViewButtonColumn)outOfCountryDataGrid.Columns["Delete"]).Text = UI.OutOfCountry_Grid_Header_Delete;
+            excludedPeriodsDataGrid.Columns["Begin"].HeaderText = UI.OutOfCountry_Grid_Header_Begin;
+            excludedPeriodsDataGrid.Columns["End"].HeaderText = UI.OutOfCountry_Grid_Header_End;
+            excludedPeriodsDataGrid.Columns["Delete"].HeaderText = UI.OutOfCountry_Grid_Header_Delete;
+            ((DataGridViewButtonColumn)excludedPeriodsDataGrid.Columns["Delete"]).Text = UI.OutOfCountry_Grid_Header_Delete;
         }
 
         private void computeButton_Click(object sender, EventArgs e)
@@ -126,7 +126,7 @@ namespace CanadaCitizenship
                 temporaryDTP.Value = selected.TemporaryDate ?? DateTime.Today;
                 permanentResidencyDTP.Value = selected.PRDate ?? DateTime.Today;
                 OutOfCountry.Clear();
-                foreach (var period in selected.OutOfCountry)
+                foreach (var period in selected.ExclusionPeriods)
                 {
                     OutOfCountry.Add(period);
                 }
@@ -158,9 +158,9 @@ namespace CanadaCitizenship
             });
         }
 
-        private void outOfCountryDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void excludedPeriodsDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == outOfCountryDataGrid.Columns["Delete"].Index)
+            if (e.ColumnIndex == excludedPeriodsDataGrid.Columns["Delete"].Index)
             {
                 OutOfCountry.RemoveAt(e.RowIndex);
             }
