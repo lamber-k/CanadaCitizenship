@@ -234,4 +234,16 @@
   <data name="EnumPeriodOther" xml:space="preserve">
     <value>Other</value>
   </data>
+  <data name="InsertRowSummary" xml:space="preserve">
+    <value>Insert exclusion period</value>
+  </data>
+  <data name="InsertRowUniqueError" xml:space="preserve">
+    <value>Only one row can be added at a time</value>
+  </data>
+  <data name="EditRowSummary" xml:space="preserve">
+    <value>Edit exclusion period</value>
+  </data>
+  <data name="EditRowUniqueError" xml:space="preserve">
+    <value>One one row can be edited at a time</value>
+  </data>
 </root>

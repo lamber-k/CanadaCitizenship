@@ -54,7 +54,7 @@
                                                 </RadzenDropDown>
                                             </EditTemplate>
                                         </RadzenDataGridColumn>
-                                        <RadzenDataGridColumn Title="@Loc["TablePeriodBeginHeaderTitle"]" Sortable="true" Width="150px" Property="Begin" FormatString="{0:d}" SortOrder="SortOrder.Descending">
+                                        <RadzenDataGridColumn Title="@Loc["TablePeriodBeginHeaderTitle"]" Sortable="false" Width="150px" Property="Begin" FormatString="{0:d}" SortOrder="SortOrder.Descending">
                                             <EditTemplate Context="period">
                                                 <RadzenDatePicker Name="BeginPeriodComponent" @bind-Value="period.Begin" Max="period.End" DateFormat="d" Style="width:150px; display: block;" />
                                                 <RadzenRequiredValidator Component="BeginPeriodComponent" Text="@Loc["BeginRequired"]" />
@@ -63,7 +63,7 @@
                                         </RadzenDataGridColumn>
                                         <RadzenDataGridColumn Title="@Loc["TablePeriodEndHeaderTitle"]" Width="150px" Property="End" FormatString="{0:d}" Sortable="false">
                                             <EditTemplate Context="period">
-                                                <RadzenDatePicker Name="EndPeriodComponent" @bind-Value="period.End" Min="period.End" DateFormat="d" Style="width:150px; display: block;" />
+                                                <RadzenDatePicker Name="EndPeriodComponent" @bind-Value="period.End" Min="period.Begin" DateFormat="d" Style="width:150px; display: block;" />
                                                 <RadzenRequiredValidator Component="EndPeriodComponent" Text="@Loc["EndRequired"]" />
                                                 <RadzenCompareValidator Component="EndPeriodComponent" Operator="CompareOperator.GreaterThanEqual" Value="@period.Begin" Text="@Loc["EndDateGThanBegin"]" />
                                             </EditTemplate>
@@ -79,8 +79,6 @@
                                                 <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(period))" aria-label="Save">
                                                 </RadzenButton>
                                                 <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => CancelEdit(period))" aria-label="Cancel">
-                                                </RadzenButton>
-                                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(period))" aria-label="Delete">
                                                 </RadzenButton>
                                             </EditTemplate>
                                         </RadzenDataGridColumn>

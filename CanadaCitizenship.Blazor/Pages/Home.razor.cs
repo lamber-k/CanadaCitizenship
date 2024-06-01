@@ -57,8 +57,15 @@ namespace CanadaCitizenship.Blazor.Pages
         /// </summary>
         public async Task InsertRow()
         {
-            ToCreate = new Period();
-            await excludedPeriodsDataGrid.InsertRow(ToCreate);
+            if (ToUpdate is null && ToCreate is null)
+            {
+                ToCreate = new Period(DateTime.Today, DateTime.Today, PeriodType.None);
+                await excludedPeriodsDataGrid.InsertRow(ToCreate);
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, Loc["InsertRowSummary"], Loc["InsertRowUniqueError"]);
+            }
         }
 
         /// <summary>
@@ -67,8 +74,15 @@ namespace CanadaCitizenship.Blazor.Pages
         /// <param name="period">Exclusion period to edit</param>
         async Task EditRow(Period period)
         {
-            ToUpdate = period;
-            await excludedPeriodsDataGrid.EditRow(period);
+            if (ToUpdate is null && ToCreate is null)
+            {
+                ToUpdate = new Period(period);
+                await excludedPeriodsDataGrid.EditRow(period);
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, Loc["EditRowSummary"], Loc["EditRowUniqueError"]);
+            }
         }
 
         /// <summary>
@@ -87,6 +101,12 @@ namespace CanadaCitizenship.Blazor.Pages
         /// <param name="period"></param>
         void CancelEdit(Period period)
         {
+            if (ToUpdate is not null)
+            {
+                // Restore
+                SelectedProfile.ExclusionPeriods[SelectedProfile.ExclusionPeriods.IndexOf(period)] = ToUpdate;
+            }
+
             ToUpdate = null;
             ToCreate = null;
 
@@ -117,7 +137,15 @@ namespace CanadaCitizenship.Blazor.Pages
         /// <summary>
         /// Save the exclusion period in pending edit
         /// </summary>
-        public Task OnUpdateRow() => SaveProfiles();
+        public async Task OnUpdateRow(Period originalPeriod)
+        {
+            if (ToUpdate is not null)
+            {
+                ToUpdate = null;
+                await SaveProfiles();
+                Compute();
+            }
+        }
 
         /// <summary>
         /// Save a new exclusion period
@@ -231,7 +259,10 @@ namespace CanadaCitizenship.Blazor.Pages
                 }
                 else
                 {
-                    Period? found = Result.Periods.FirstOrDefault(p => p.DateEnclosed(args.Date));
+                    Period? found = Result.Periods
+                        .Where(p => p.DateEnclosed(args.Date))
+                        .OrderByDescending(p => p.Type, PeriodTypePriorityComparer.Default)
+                        .FirstOrDefault();
                     string classType = found?.Type switch
                     {
                         PeriodType.Temporary => "temporary",

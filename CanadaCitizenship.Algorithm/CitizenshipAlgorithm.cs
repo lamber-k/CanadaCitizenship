@@ -39,9 +39,12 @@
             List<Period> periods = CreatePeriods(profile.ExclusionPeriods, begin, prBeginDate);
 
             // Split period having Today
-            Period enclosedToday = periods.First(p => DateTime.Today > p.Begin && DateTime.Today < p.End);
-            periods.Add(new Period(enclosedToday.Begin, DateTime.Today, enclosedToday.Type));
-            enclosedToday.Begin = DateTime.Today;
+            if (!periods.Any(p => p.Begin == DateTime.Today))
+            {
+                Period enclosedToday = periods.First(p => p.DateEnclosed(DateTime.Today));
+                periods.Add(new Period(enclosedToday.Begin, DateTime.Today, enclosedToday.Type));
+                enclosedToday.Begin = DateTime.Today;
+            }
 
             // Adjust
             ComputeTemporaryPeriod(periods, prBeginDate, out double temporaryDays, out DateTime temporaryDate);

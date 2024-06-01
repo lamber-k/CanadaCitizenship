@@ -16,6 +16,14 @@ namespace CanadaCitizenship.Algorithm
             Name = name ?? string.Empty;
         }
 
+        public Period(Period other)
+        {
+            Begin = other.Begin;
+            End = other.End;
+            Type = other.Type;
+            Name = other.Name;
+        }
+
         /// <summary>
         /// Name of the Period - Optional
         /// </summary>
@@ -45,13 +53,13 @@ namespace CanadaCitizenship.Algorithm
         /// <returns></returns>
         public bool DateEnclosed(DateTime date)
         {
-            if (Type == PeriodType.PR || Type == PeriodType.Temporary)
+            if (Type == PeriodType.Vacation || Type == PeriodType.Other)
             {
-                return date >= Begin && date <= End;
+                return date >= Begin && date < End;
             }
             else
             {
-                return date >= Begin && date < End;
+                return date >= Begin && date <= End;
             }
         }
     }
