@@ -26,34 +26,34 @@
         /// <param name="profile">Profile data to consider</param>
         /// <returns>Result of the computation</returns>
         /// <exception cref="InvalidOperationException">PR date has not been provided</exception>
-        public static CitizenshipResult Compute(Profile profile)
+        public static CitizenshipResult Compute(Profile profile, DateTime? now = null)
         {
             if (!profile.PRDate.HasValue)
             {
                 throw new InvalidOperationException("PR_NO_VALUE");
             }
-
+            DateTime today = now?.Date ?? DateTime.Today;
             DateTime begin = profile.TemporaryDate ?? profile.PRDate!.Value.Date;
             DateTime prBeginDate = profile.PRDate!.Value.Date;
 
-            List<Period> periods = CreatePeriods(profile.ExclusionPeriods, begin, prBeginDate);
+            List<Period> periods = CreatePeriods(profile.ExclusionPeriods, begin, prBeginDate, today);
 
             // Split period having Today
-            if (!periods.Any(p => p.Begin == DateTime.Today))
+            if (!periods.Any(p => p.Begin == today || p.End == today))
             {
-                Period enclosedToday = periods.First(p => p.DateEnclosed(DateTime.Today));
-                periods.Add(new Period(enclosedToday.Begin, DateTime.Today, enclosedToday.Type));
-                enclosedToday.Begin = DateTime.Today;
+                Period enclosedToday = periods.First(p => p.DateEnclosed(today));
+                periods.Add(new Period(enclosedToday.Begin, today, enclosedToday.Type));
+                enclosedToday.Begin = today;
             }
 
             // Adjust
             ComputeTemporaryPeriod(periods, prBeginDate, out double temporaryDays, out DateTime temporaryDate);
 
-            int prDays = periods.Where(p => p.Type == PeriodType.PR && p.End <= DateTime.Today).Sum(p => p.Days);
-            double remainingDays = REQUIRED_DAYS - (prDays + Math.Floor(temporaryDays));
+            int prDays = periods.Where(p => p.Type == PeriodType.PR && p.End <= today).Sum(p => p.Days);
+            double remainingDays = Math.Max(0, REQUIRED_DAYS - (prDays + Math.Floor(temporaryDays)));
 
             // Compute projected date
-            DateTime projectedDate = ComputeProjectedDate(periods, remainingDays, ref temporaryDays, ref temporaryDate);
+            DateTime projectedDate = ComputeProjectedDate(periods, remainingDays, today, ref temporaryDays, ref temporaryDate);
 
             // Remove any period less than max sliding period 
             return new CitizenshipResult((int)temporaryDays, temporaryDate, prDays, (int)remainingDays, projectedDate, periods.OrderBy(p => p.Begin).ToArray());
@@ -67,17 +67,25 @@
         /// <param name="temporaryDays">Number of days considered for citizenship application</param>
         /// <param name="temporaryDate">Start of the temporary status date considered</param>
         /// <returns>The computed projected date</returns>
-        private static DateTime ComputeProjectedDate(List<Period> periods, double remainingDays, ref double temporaryDays, ref DateTime temporaryDate)
+        private static DateTime ComputeProjectedDate(List<Period> periods, double remainingDays, DateTime today, ref double temporaryDays, ref DateTime temporaryDate)
         {
-            DateTime currentDate = DateTime.Today;
-            DateTime projectedDate = currentDate;
+            DateTime currentDate = today.AddDays(1);
+            DateTime projectedDate = today;
             for (double remaining = remainingDays; remaining > 0;)
             {
                 Period? currentPeriod = periods.FirstOrDefault(p => p.DateEnclosed(currentDate));
                 if (currentPeriod is null)
                 {
                     // No more period registered, create new one with remaining number of days
-                    periods.Add(new Period(currentDate, currentDate.AddDays((int)remaining), PeriodType.PR));
+                    var lastPeriod = periods.OrderByDescending(p => p.Begin).FirstOrDefault();
+                    if (lastPeriod?.Type == PeriodType.PR)
+                    {
+                        lastPeriod.End = lastPeriod.End.AddDays((int)remaining);
+                    }
+                    else
+                    {
+                        periods.Add(new Period(currentDate, currentDate.AddDays((int)remaining), PeriodType.PR));
+                    }
                     projectedDate = currentDate.AddDays((int)remaining);
                     remaining = 0;
                 }
@@ -166,11 +174,12 @@
         /// <param name="begin">Begin temporary status</param>
         /// <param name="prBeginDate">Begin PR date received</param>
         /// <returns>All the periods including exlusion and valid status</returns>
-        private static List<Period> CreatePeriods(IReadOnlyCollection<Period> exclusionPeriods, DateTime begin, DateTime prBeginDate)
+        private static List<Period> CreatePeriods(IReadOnlyCollection<Period> exclusionPeriods, DateTime begin, DateTime prBeginDate, DateTime today)
         {
             List<Period> periods = [];
             Queue<Period> exclusions = new Queue<Period>(exclusionPeriods.OrderBy(excluded => excluded.Begin));
-            DateTime maxDate = exclusionPeriods.Select(p => p.End).OrderByDescending(d => d).FirstOrDefault(DateTime.Today);
+            DateTime maxDate = exclusionPeriods.Select(p => p.End).OrderByDescending(d => d).FirstOrDefault(today);
+            maxDate = maxDate > today ? maxDate : today;
             DateTime current = begin;
             while (true)
             {
@@ -178,6 +187,14 @@
                 {
                     // Reached the end
                     //|-----PR---^---|
+                    if (current < prBeginDate)
+                    {
+                        // Have not reached temporary yet
+                        //|---t--PR---^---|
+                        periods.Add(new Period(current, prBeginDate.AddDays(-1), PeriodType.Temporary));
+                        current = prBeginDate;
+                    }
+
                     periods.Add(new Period(current, maxDate, PeriodType.PR));
                     current = maxDate;
                     break;
@@ -187,11 +204,11 @@
                     // Before PR
                     //|-^--b--e-PR----|
                     //|-^---b---PR-e--|
-                    periods.AddRange(
-                    [
-                        new Period(current, closestNext.Begin, PeriodType.Temporary),
-                        closestNext
-                    ]);
+                    if (periods.LastOrDefault()?.End != closestNext.Begin)
+                    {
+                        periods.Add(new Period(current, closestNext.Begin, PeriodType.Temporary));
+                    }
+                    periods.Add(closestNext);
                     current = closestNext.End;
                 }
                 else
@@ -200,22 +217,15 @@
                     if (current < prBeginDate)
                     {
                         //|-----^---PR-b----e--|
-                        periods.AddRange(
-                        [
-                            new Period(current, prBeginDate.AddDays(-1), PeriodType.Temporary),
-                            new Period(prBeginDate, closestNext.Begin, PeriodType.PR),
-                            closestNext
-                        ]);
+                        periods.Add(new Period(current, prBeginDate.AddDays(-1), PeriodType.Temporary));
+                        current = prBeginDate;
                     }
-                    else
-                    {
-                        //|----PR-^--b----e--|
-                        periods.AddRange(
-                        [
-                            closestNext,
+                    //|----PR-^--b----e--|
+                    periods.AddRange(
+                    [
+                        closestNext,
                             new Period(current, closestNext.Begin, PeriodType.PR)
-                        ]);
-                    }
+                    ]);
                     current = closestNext.End;
                 }
             }

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CanadaCitizenship", "Canada
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CanadaCitizenship.Blazor", "CanadaCitizenship.Blazor\CanadaCitizenship.Blazor.csproj", "{60ABBE0B-709C-4923-830F-E59CC6628686}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanadaCitizenship.Algorithm.Tests", "CanadaCitizenship.Algorithm.Tests\CanadaCitizenship.Algorithm.Tests.csproj", "{4C3139F3-5E1B-4115-9638-255C768E04C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{60ABBE0B-709C-4923-830F-E59CC6628686}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60ABBE0B-709C-4923-830F-E59CC6628686}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60ABBE0B-709C-4923-830F-E59CC6628686}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C3139F3-5E1B-4115-9638-255C768E04C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C3139F3-5E1B-4115-9638-255C768E04C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C3139F3-5E1B-4115-9638-255C768E04C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C3139F3-5E1B-4115-9638-255C768E04C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

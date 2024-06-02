@@ -1,10 +1,12 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace CanadaCitizenship.Algorithm
 {
     /// <summary>
     /// Define a period
     /// </summary>
+    [DebuggerDisplay("Period(Name:{Name}, Type:{Type}, Begin:{Begin}, End:{End})")]
     public class Period
     {
         public Period() { }
