@@ -26,12 +26,12 @@
                                 <RadzenRow>
                                     <RadzenColumn Size="12" SizeSM="6">
                                         <RadzenFormField Text="@Loc["FirstEntryLabel"]" Variant="Variant.Filled">
-                                            <RadzenDatePicker DateFormat="d" @bind-Value="@SelectedProfile!.TemporaryDate" TValue="DateTime?"></RadzenDatePicker>
+                                            <RadzenDatePicker DateFormat="d" @bind-Value="@SelectedProfile!.TemporaryDate" TValue="DateTime?" Max="DateTime.Today"></RadzenDatePicker>
                                         </RadzenFormField>
                                     </RadzenColumn>
                                     <RadzenColumn Size="12" SizeSM="6">
                                         <RadzenFormField Text="@Loc["PRLabel"]" Variant="Variant.Filled">
-                                            <RadzenDatePicker DateFormat="d" @bind-Value="@SelectedProfile!.PRDate" TValue="DateTime?"></RadzenDatePicker>
+                                            <RadzenDatePicker DateFormat="d" @bind-Value="@SelectedProfile!.PRDate" TValue="DateTime?" Max="DateTime.Today"></RadzenDatePicker>
                                         </RadzenFormField>
                                     </RadzenColumn>
                                 </RadzenRow>

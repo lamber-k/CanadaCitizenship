@@ -238,6 +238,7 @@ namespace CanadaCitizenship.Blazor.Pages
             {
                 NotificationService.Notify(NotificationSeverity.Error, Loc["ErrorComputationTitle"], Messages.ResourceManager.GetString(iex.Message));
             }
+            StateHasChanged();
         }
 
         /// <summary>

@@ -28,6 +28,7 @@ namespace CanadaCitizenship.Blazor.Pages
                     {
                         LocalStorageService.SetItemAsStringAsync(STORAGE_CURRENT_PROFILE_KEY, _selectedProfile.Name);
                         _selectedProfile.PropertyChanged += SelectedProfile_PropertyChanged;
+                        Result = null;
                         Compute();
                     }
                 }
