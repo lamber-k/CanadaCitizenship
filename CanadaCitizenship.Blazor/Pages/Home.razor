@@ -19,7 +19,7 @@
                 <RadzenFieldset AllowCollapse="true">
                     <HeaderTemplate><RadzenLabel>@Loc["ParametersSectionHeader"]</RadzenLabel></HeaderTemplate>
                     <ChildContent>
-                        <RadzenRow Gap="1rem" style="max-width: 800px">
+                        <RadzenRow Gap="1rem">
                             <div>@Loc["IntroText"]</div>
                             <div>@((MarkupString)Loc["HTMLMoreInfoText"].Value)</div>
                             <RadzenColumn Size="12">
@@ -56,14 +56,14 @@
                                         </RadzenDataGridColumn>
                                         <RadzenDataGridColumn Title="@Loc["TablePeriodBeginHeaderTitle"]" Sortable="false" Width="150px" Property="Begin" FormatString="{0:d}" SortOrder="SortOrder.Descending">
                                             <EditTemplate Context="period">
-                                                <RadzenDatePicker Name="BeginPeriodComponent" @bind-Value="period.Begin" Max="period.End" DateFormat="d" Style="width:150px; display: block;" />
+                                                <RadzenDatePicker Name="BeginPeriodComponent" @bind-Value="period.Begin" DateFormat="d" Style="width:150px; display: block;" />
                                                 <RadzenRequiredValidator Component="BeginPeriodComponent" Text="@Loc["BeginRequired"]" />
                                                 <RadzenCompareValidator Component="BeginPeriodComponent" Operator="CompareOperator.LessThanEqual" Value="@period.End" Text="@Loc["BeginDateLEThanEnd"]" />
                                             </EditTemplate>
                                         </RadzenDataGridColumn>
                                         <RadzenDataGridColumn Title="@Loc["TablePeriodEndHeaderTitle"]" Width="150px" Property="End" FormatString="{0:d}" Sortable="false">
                                             <EditTemplate Context="period">
-                                                <RadzenDatePicker Name="EndPeriodComponent" @bind-Value="period.End" Min="period.Begin" DateFormat="d" Style="width:150px; display: block;" />
+                                                <RadzenDatePicker Name="EndPeriodComponent" @bind-Value="period.End" DateFormat="d" Style="width:150px; display: block;" />
                                                 <RadzenRequiredValidator Component="EndPeriodComponent" Text="@Loc["EndRequired"]" />
                                                 <RadzenCompareValidator Component="EndPeriodComponent" Operator="CompareOperator.GreaterThanEqual" Value="@period.Begin" Text="@Loc["EndDateGThanBegin"]" />
                                             </EditTemplate>
